@@ -1,5 +1,9 @@
 package containers
 
+import (
+	"github.com/barisere/jenerics"
+)
+
 type Slice[T any] []T
 
 func (self Slice[T]) ForEach(f func(T)) {
@@ -10,6 +14,32 @@ func (self Slice[T]) ForEachIdx(f func(T, int)) {
 	for idx, value := range self {
 		f(value, idx)
 	}
+}
+
+func (self Slice[T]) Iter() jenerics.Iterator[T] {
+	return &forwardIterator[T]{slice: self}
+}
+
+type forwardIterator[T any] struct {
+	slice Slice[T]
+	pos   int
+	done  bool
+}
+
+func (it forwardIterator[T]) Clone() jenerics.Iterator[T] {
+	return &forwardIterator[T]{it.slice[:], it.pos, it.done}
+}
+
+// Next implements jenerics.Iterator
+func (it *forwardIterator[T]) Next() (value T, done bool) {
+	var t T
+	if it.done {
+		return t, it.done
+	}
+	t = it.slice[it.pos]
+	it.pos += 1
+	it.done = it.pos >= len(it.slice)
+	return t, false
 }
 
 func (self Slice[T]) ToMap() GoMap[int, T] {
