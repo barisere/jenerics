@@ -33,12 +33,12 @@ func (it forwardIterator[T]) Clone() jenerics.Iterator[T] {
 // Next implements jenerics.Iterator
 func (it *forwardIterator[T]) Next() (value T, done bool) {
 	var t T
+	it.done = it.pos >= len(it.slice)
 	if it.done {
 		return t, it.done
 	}
 	t = it.slice[it.pos]
 	it.pos += 1
-	it.done = it.pos >= len(it.slice)
 	return t, false
 }
 
