@@ -112,24 +112,3 @@ func lastInOrder[T jenerics.Ordered](items Slice[T], ordering jenerics.Ordering)
 		return t1
 	}, items[0])
 }
-
-type Tuple[T, U any] struct {
-	T T
-	U U
-}
-
-func Zip[T, U any](ts Slice[T], us Slice[U]) Slice[Tuple[T, U]] {
-	result := make(Slice[Tuple[T, U]], 0, Min([]int{len(ts), len(us)}))
-	for i := range result {
-		result[i] = Tuple[T, U]{ts[i], us[i]}
-	}
-	return result
-}
-
-func Unzip[T, U any](values Slice[Tuple[T, U]]) (ts Slice[T], us Slice[U]) {
-	for i := range values {
-		ts = append(ts, values[i].T)
-		us = append(us, values[i].U)
-	}
-	return ts, us
-}
