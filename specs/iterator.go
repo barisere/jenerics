@@ -11,27 +11,28 @@ import (
 
 func Test_iterator_satifies_functor_laws[T, R1 any, R2 Ordered](
 	t *testing.T,
-	it Iterator[T],
+	it CloneableIterator[T],
 	g func(T) R1,
 	f func(R1) R2,
 ) {
 	t.Run("map f . map g == map (f . g)", func(t *testing.T) {
-		test_composition_of_mappings(t, it.Clone(), g, f)
+		test_composition_of_mappings(t, it, g, f)
 	})
 }
 
 func test_composition_of_mappings[T, R1 any, R2 Ordered](
 	t *testing.T,
-	iterator Iterator[T],
+	iterator CloneableIterator[T],
 	g func(T) R1,
 	f func(R1) R2,
 ) {
-	cloned_iterator := iterator.Clone()
+	clone_a := iterator.Clone()
+	clone_b := iterator.Clone()
 
-	map_with_g := Map(iterator, g)
-	and_then_with_f := Map(containers.Slice[R1](Collect(map_with_g)).Iter(), f)
+	map_with_g := Map(clone_a, g)
+	and_then_with_f := Map[R1](containers.Slice[R1](Collect(map_with_g)).Iter(), f)
 
-	map_with_compose_f_g := Map(cloned_iterator, Compose(f, g))
+	map_with_compose_f_g := Map(clone_b, Compose(f, g))
 
 	assertEqualIterators(t, map_with_compose_f_g, and_then_with_f)
 }

@@ -8,11 +8,11 @@ import (
 
 type GoMap[K comparable, V any] map[K]V
 
-func (self GoMap[K, V]) KeyIterator() jenerics.Iterator[K] {
+func (self GoMap[K, V]) KeyIterator() jenerics.CloneableIterator[K] {
 	return keyIterator[K, V]{newIterState(self)}
 }
 
-func (self GoMap[K, V]) ValueIterator() jenerics.Iterator[V] {
+func (self GoMap[K, V]) ValueIterator() jenerics.CloneableIterator[V] {
 	return valueIterator[K, V]{newIterState(self)}
 }
 

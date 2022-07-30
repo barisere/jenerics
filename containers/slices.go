@@ -16,7 +16,7 @@ func (self Slice[T]) ForEachIdx(f func(T, int)) {
 	}
 }
 
-func (self Slice[T]) Iter() jenerics.Iterator[T] {
+func (self Slice[T]) Iter() jenerics.CloneableIterator[T] {
 	return &forwardIterator[T]{slice: self}
 }
 

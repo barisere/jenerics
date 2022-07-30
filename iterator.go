@@ -1,8 +1,12 @@
 package jenerics
 
 type Iterator[T any] interface {
-	Cloneable[Iterator[T]]
 	Next() (value T, done bool)
+}
+
+type CloneableIterator[T any] interface {
+	Cloneable[Iterator[T]]
+	Iterator[T]
 }
 
 type mapper[I, O any] struct {
@@ -16,7 +20,10 @@ func (self mapper[I, O]) Next() (O, bool) {
 }
 
 func (self mapper[I, O]) Clone() Iterator[O] {
-	return mapper[I, O]{it: self.it.Clone(), f: self.f}
+	if it, ok := self.it.(CloneableIterator[I]); ok {
+		return mapper[I, O]{it.Clone(), self.f}
+	}
+	return mapper[I, O]{it: self.it, f: self.f}
 }
 
 func Map[I, O any](it Iterator[I], f func(I) O) Iterator[O] {
@@ -43,7 +50,10 @@ func (self filter[T]) Next() (value T, done bool) {
 }
 
 func (self filter[T]) Clone() Iterator[T] {
-	return filter[T]{it: self.it.Clone(), keep: self.keep}
+	if it, ok := self.it.(CloneableIterator[T]); ok {
+		return filter[T]{it.Clone(), self.keep}
+	}
+	return filter[T]{it: self.it, keep: self.keep}
 }
 
 func Filter[T any](it Iterator[T], predicate func(T) bool) Iterator[T] {
