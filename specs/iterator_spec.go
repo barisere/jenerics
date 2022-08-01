@@ -44,3 +44,18 @@ func assertEqualIterators[T Ordered](t *testing.T, a Iterator[T], b Iterator[T])
 	sort.Slice(bs, func(i, j int) bool { return bs[i] < bs[j] })
 	assert.Equal(t, as, bs)
 }
+
+// In other words, `Filter(iterator, pred) ≍ Partition(iterator, pred).First`
+func Test_filter_drops_non_matching_items[T any](
+	t *testing.T,
+	it CloneableIterator[T],
+	pred Predicate[T],
+) {
+	non_matches := Collect(Filter(it.Clone(), Not(pred)))
+	matches := Collect(Filter[T](it, pred))
+
+	containers.Slice[T](matches).ForEach(func(item T) {
+		assert.True(t, pred(item))
+		assert.NotContains(t, non_matches, item, "matches and non matches must be disjoint")
+	})
+}

@@ -80,12 +80,6 @@ func FoldRight[From, To any](s Slice[From], combine func(From, To) To, start To)
 	return start
 }
 
-func DoTimes(count uint, do func(uint)) {
-	for i := uint(0); i < count; i++ {
-		do(i)
-	}
-}
-
 func FoldM[From, To any, M jenerics.Monoid[To]](s Slice[From], fn func(From) To, m M) To {
 	transform := func(f From, t To) To {
 		return m.Concat(fn(f), t)

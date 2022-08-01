@@ -109,3 +109,8 @@ func Unzip[T, U any](values Iterator[Pair[T, U]]) (ts Iterator[T], us Iterator[U
 	tEcho.refresh, uEcho.refresh = refresh, refresh
 	return ts, us
 }
+
+func Some[T any](values Iterator[T], pred Predicate[T]) bool {
+	filtered := Filter(values, pred)
+	return len(Collect(filtered)) > 0
+}

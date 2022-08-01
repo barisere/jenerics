@@ -9,7 +9,8 @@ import (
 	"github.com/barisere/jenerics/specs"
 )
 
-func TestSliceIteratorSatifiesFunctorLaws(t *testing.T) {
-	it := Slice[int]{1, 2, 3, 4, 5}.Iter()
-	specs.Test_iterator_satifies_functor_laws(t, it, j.Plus[int], strconv.Itoa)
+func TestSliceWithIteratorSpecs(t *testing.T) {
+	ints := Slice[int]{1, 2, 3, 4, 5}
+	specs.Test_iterator_satifies_functor_laws(t, ints.Iter(), j.Plus[int], strconv.Itoa)
+	specs.Test_filter_drops_non_matching_items(t, ints.Iter(), j.IsOdd[int])
 }
