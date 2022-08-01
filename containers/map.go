@@ -77,10 +77,23 @@ func (self GoMap[K, V]) Collect() Slice[V] {
 	return values
 }
 
-func MinMap[K comparable, V jenerics.Ordered](items GoMap[K, V]) V {
-	return Min(items.Collect())
+type orderedKey interface {
+	comparable
+	jenerics.Ordered
 }
 
-func MaxMap[K comparable, V jenerics.Ordered](items GoMap[K, V]) V {
-	return Max(items.Collect())
+func MinMapKey[K orderedKey, V jenerics.Ordered](items GoMap[K, V]) K {
+	return jenerics.Min[K](items.KeyIterator())
+}
+
+func MinMapValue[K comparable, V jenerics.Ordered](items GoMap[K, V]) V {
+	return jenerics.Min[V](items.ValueIterator())
+}
+
+func MaxMapKey[K orderedKey, V jenerics.Ordered](items GoMap[K, V]) K {
+	return jenerics.Max[K](items.KeyIterator())
+}
+
+func MaxMapValue[K comparable, V jenerics.Ordered](items GoMap[K, V]) V {
+	return jenerics.Max[V](items.ValueIterator())
 }

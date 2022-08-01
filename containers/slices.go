@@ -86,23 +86,3 @@ func FoldM[From, To any, M jenerics.Monoid[To]](s Slice[From], fn func(From) To,
 	}
 	return Fold(s, transform, m.Identity())
 }
-
-func Max[T jenerics.Ordered](items Slice[T]) T {
-	return lastInOrder(items, jenerics.OrderingLess)
-}
-
-func Min[T jenerics.Ordered](items Slice[T]) T {
-	return lastInOrder(items, jenerics.OrderingGt)
-}
-
-func lastInOrder[T jenerics.Ordered](items Slice[T], ordering jenerics.Ordering) T {
-	if len(items) == 1 {
-		return items[0]
-	}
-	return Fold(items[1:], func(t1, t2 T) T {
-		if jenerics.Compare(t1, t2) == ordering {
-			return t2
-		}
-		return t1
-	}, items[0])
-}

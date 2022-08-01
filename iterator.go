@@ -114,3 +114,26 @@ func Some[T any](values Iterator[T], pred Predicate[T]) bool {
 	filtered := Filter(values, pred)
 	return len(Collect(filtered)) > 0
 }
+
+func Max[T Ordered](items Iterator[T]) T {
+	return lastInOrder(items, OrderingGt)
+}
+
+func lastInOrder[T Ordered](items Iterator[T], ordering Ordering) T {
+	last, done := items.Next()
+	for {
+		if done {
+			break
+		}
+		item, d := items.Next()
+		if Compare(item, last) == ordering {
+			last = item
+		}
+		done = d
+	}
+	return last
+}
+
+func Min[T Ordered](values Iterator[T]) T {
+	return lastInOrder(values, OrderingLess)
+}
