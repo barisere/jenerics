@@ -67,3 +67,16 @@ func Test_filter_drops_non_matching_items[T any](
 		assert.NotContains(t, non_matches, item, "matches and non matches must be disjoint")
 	})
 }
+
+func Zipped_iterators_produce_only_as_many_as_the_shortest[T, U any](
+	t *testing.T,
+	ts Iterator[T],
+	us Iterator[U],
+) {
+	lenTs := len(Collect(ts.Clone()))
+	lenUs := len(Collect(us.Clone()))
+	lenShorter := Min(lenTs, lenUs)
+	zipped := Zip(ts, us)
+
+	assert.Len(t, Collect(zipped), lenShorter)
+}

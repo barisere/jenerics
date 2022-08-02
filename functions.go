@@ -33,6 +33,20 @@ func IsOdd[T Integers](n T) bool {
 	return Not(IsEven[T])(n)
 }
 
+func Min[T Ordered](a, b T) T {
+	if Compare(a, b) == OrderingLess {
+		return a
+	}
+	return b
+}
+
+func Max[T Ordered](a, b T) T {
+	if Compare(a, b) == OrderingGt {
+		return a
+	}
+	return b
+}
+
 func Not[T any](pred Predicate[T]) Predicate[T] {
 	return func(t T) bool {
 		return !pred(t)

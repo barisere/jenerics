@@ -81,17 +81,17 @@ type orderedKey interface {
 }
 
 func MinMapKey[K orderedKey, V Ordered](items GoMap[K, V]) K {
-	return Min[K](items.KeyIterator())
+	return MinItem[K](items.KeyIterator())
 }
 
 func MinMapValue[K comparable, V Ordered](items GoMap[K, V]) V {
-	return Min[V](items.ValueIterator())
+	return MinItem[V](items.ValueIterator())
 }
 
 func MaxMapKey[K orderedKey, V Ordered](items GoMap[K, V]) K {
-	return Max[K](items.KeyIterator())
+	return MaxItem[K](items.KeyIterator())
 }
 
 func MaxMapValue[K comparable, V Ordered](items GoMap[K, V]) V {
-	return Max[V](items.ValueIterator())
+	return MaxItem[V](items.ValueIterator())
 }

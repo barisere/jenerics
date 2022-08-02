@@ -66,10 +66,11 @@ func (z *zipper[T, U]) Next() (value *Pair[T, U], done bool) {
 	var u U
 	done = z.tDone || z.uDone
 	if done {
-		return nil, done
+		return
 	}
 	t, z.tDone = z.tIter.Next()
 	u, z.uDone = z.uIter.Next()
+	done = z.tDone || z.uDone
 	value = &Pair[T, U]{t, u}
 	return value, done
 }
@@ -114,7 +115,7 @@ func Some[T any](values Iterator[T], pred Predicate[T]) bool {
 	return len(Collect(filtered)) > 0
 }
 
-func Max[T Ordered](items Iterator[T]) T {
+func MaxItem[T Ordered](items Iterator[T]) T {
 	return lastInOrder(items, OrderingGt)
 }
 
@@ -133,6 +134,6 @@ func lastInOrder[T Ordered](items Iterator[T], ordering Ordering) T {
 	return last
 }
 
-func Min[T Ordered](values Iterator[T]) T {
+func MinItem[T Ordered](values Iterator[T]) T {
 	return lastInOrder(values, OrderingLess)
 }
