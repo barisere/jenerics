@@ -6,11 +6,11 @@ import (
 
 type GoMap[K comparable, V any] map[K]V
 
-func (self GoMap[K, V]) KeyIterator() CloneableIterator[K] {
+func (self GoMap[K, V]) KeyIterator() Iterator[K] {
 	return keyIterator[K, V]{newIterState(self)}
 }
 
-func (self GoMap[K, V]) ValueIterator() CloneableIterator[V] {
+func (self GoMap[K, V]) ValueIterator() Iterator[V] {
 	return valueIterator[K, V]{newIterState(self)}
 }
 

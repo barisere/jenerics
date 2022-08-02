@@ -12,7 +12,7 @@ func (self Slice[T]) ForEachIdx(f func(T, int)) {
 	}
 }
 
-func (self Slice[T]) Iter() CloneableIterator[T] {
+func (self Slice[T]) Iter() Iterator[T] {
 	return &forwardIterator[T]{slice: self}
 }
 

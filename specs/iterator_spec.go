@@ -19,7 +19,7 @@ func Next_visits_all_its_elements_of_finite_iterator[T any](
 
 func Test_iterator_satifies_functor_laws[T, R1 any, R2 Ordered](
 	t *testing.T,
-	it CloneableIterator[T],
+	it Iterator[T],
 	g func(T) R1,
 	f func(R1) R2,
 ) {
@@ -30,7 +30,7 @@ func Test_iterator_satifies_functor_laws[T, R1 any, R2 Ordered](
 
 func test_composition_of_mappings[T, R1 any, R2 Ordered](
 	t *testing.T,
-	iterator CloneableIterator[T],
+	iterator Iterator[T],
 	g func(T) R1,
 	f func(R1) R2,
 ) {
@@ -56,11 +56,11 @@ func assertEqualIterators[T Ordered](t *testing.T, a Iterator[T], b Iterator[T])
 // In other words, `Filter(iterator, pred) ≍ Partition(iterator, pred).First`
 func Test_filter_drops_non_matching_items[T any](
 	t *testing.T,
-	it CloneableIterator[T],
+	it Iterator[T],
 	pred Predicate[T],
 ) {
 	non_matches := Collect(Filter(it.Clone(), Not(pred)))
-	matches := Collect(Filter[T](it, pred))
+	matches := Collect(Filter(it, pred))
 
 	Slice[T](matches).ForEach(func(item T) {
 		assert.True(t, pred(item))
