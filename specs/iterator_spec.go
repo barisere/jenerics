@@ -9,6 +9,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func Next_visits_all_its_elements_of_finite_iterator[T any](
+	t *testing.T,
+	it Iterator[T],
+	expected_count uint,
+) {
+	all_elements := Collect(it)
+	assert.Len(t, all_elements, int(expected_count))
+}
+
 func Test_iterator_satifies_functor_laws[T, R1 any, R2 Ordered](
 	t *testing.T,
 	it CloneableIterator[T],
