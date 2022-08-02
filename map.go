@@ -1,18 +1,16 @@
-package containers
+package jenerics
 
 import (
 	"reflect"
-
-	"github.com/barisere/jenerics"
 )
 
 type GoMap[K comparable, V any] map[K]V
 
-func (self GoMap[K, V]) KeyIterator() jenerics.CloneableIterator[K] {
+func (self GoMap[K, V]) KeyIterator() CloneableIterator[K] {
 	return keyIterator[K, V]{newIterState(self)}
 }
 
-func (self GoMap[K, V]) ValueIterator() jenerics.CloneableIterator[V] {
+func (self GoMap[K, V]) ValueIterator() CloneableIterator[V] {
 	return valueIterator[K, V]{newIterState(self)}
 }
 
@@ -45,7 +43,7 @@ type keyIterator[K comparable, V any] struct {
 	iterState[K, V]
 }
 
-func (self keyIterator[K, V]) Clone() jenerics.Iterator[K] {
+func (self keyIterator[K, V]) Clone() Iterator[K] {
 	return keyIterator[K, V]{newIterState(self.source)}
 }
 
@@ -59,7 +57,7 @@ type valueIterator[K comparable, V any] struct {
 	iterState[K, V]
 }
 
-func (self valueIterator[K, V]) Clone() jenerics.Iterator[V] {
+func (self valueIterator[K, V]) Clone() Iterator[V] {
 	return valueIterator[K, V]{newIterState(self.source)}
 }
 
@@ -79,21 +77,21 @@ func (self GoMap[K, V]) Collect() Slice[V] {
 
 type orderedKey interface {
 	comparable
-	jenerics.Ordered
+	Ordered
 }
 
-func MinMapKey[K orderedKey, V jenerics.Ordered](items GoMap[K, V]) K {
-	return jenerics.Min[K](items.KeyIterator())
+func MinMapKey[K orderedKey, V Ordered](items GoMap[K, V]) K {
+	return Min[K](items.KeyIterator())
 }
 
-func MinMapValue[K comparable, V jenerics.Ordered](items GoMap[K, V]) V {
-	return jenerics.Min[V](items.ValueIterator())
+func MinMapValue[K comparable, V Ordered](items GoMap[K, V]) V {
+	return Min[V](items.ValueIterator())
 }
 
-func MaxMapKey[K orderedKey, V jenerics.Ordered](items GoMap[K, V]) K {
-	return jenerics.Max[K](items.KeyIterator())
+func MaxMapKey[K orderedKey, V Ordered](items GoMap[K, V]) K {
+	return Max[K](items.KeyIterator())
 }
 
-func MaxMapValue[K comparable, V jenerics.Ordered](items GoMap[K, V]) V {
-	return jenerics.Max[V](items.ValueIterator())
+func MaxMapValue[K comparable, V Ordered](items GoMap[K, V]) V {
+	return Max[V](items.ValueIterator())
 }

@@ -1,8 +1,4 @@
-package containers
-
-import (
-	"github.com/barisere/jenerics"
-)
+package jenerics
 
 type Slice[T any] []T
 
@@ -16,7 +12,7 @@ func (self Slice[T]) ForEachIdx(f func(T, int)) {
 	}
 }
 
-func (self Slice[T]) Iter() jenerics.CloneableIterator[T] {
+func (self Slice[T]) Iter() CloneableIterator[T] {
 	return &forwardIterator[T]{slice: self}
 }
 
@@ -26,11 +22,11 @@ type forwardIterator[T any] struct {
 	done  bool
 }
 
-func (it forwardIterator[T]) Clone() jenerics.Iterator[T] {
+func (it forwardIterator[T]) Clone() Iterator[T] {
 	return &forwardIterator[T]{it.slice[:], it.pos, it.done}
 }
 
-// Next implements jenerics.Iterator
+// Next implements Iterator
 func (it *forwardIterator[T]) Next() (value T, done bool) {
 	var t T
 	it.done = it.pos >= len(it.slice)
@@ -58,14 +54,6 @@ func Unique[T any, K comparable](s Slice[T], toKey func(T) K) Slice[T] {
 	return entries.Collect()
 }
 
-func Map[From, To any](s Slice[From], f func(From) To) Slice[To] {
-	mapped := make(Slice[To], 0, len(s))
-	for i, v := range s {
-		mapped[i] = f(v)
-	}
-	return mapped
-}
-
 func Fold[From, To any](s Slice[From], combine func(From, To) To, start To) To {
 	for _, v := range s {
 		start = combine(v, start)
@@ -80,7 +68,7 @@ func FoldRight[From, To any](s Slice[From], combine func(From, To) To, start To)
 	return start
 }
 
-func FoldM[From, To any, M jenerics.Monoid[To]](s Slice[From], fn func(From) To, m M) To {
+func FoldM[From, To any, M Monoid[To]](s Slice[From], fn func(From) To, m M) To {
 	transform := func(f From, t To) To {
 		return m.Concat(fn(f), t)
 	}
